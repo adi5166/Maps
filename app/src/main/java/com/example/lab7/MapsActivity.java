@@ -89,8 +89,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         } else {
             acceltype = false;
         }
-
-        //TODO wczytywanie z JSON
     }
 
     @Override
@@ -269,30 +267,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onDestroy();
         saveToJson();
     }
-/*
-    private void saveToJson() {
-        Gson gson = new Gson();
-        String listMarker = gson.toJson(markerList);
-        FileOutputStream outputStream;
-        try {
-            outputStream = openFileOutput(MARKER_JSON, MODE_PRIVATE);
-            FileWriter writer = new FileWriter(outputStream.getFD());
-            writer.write(listMarker);
-            writer.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-*/
-
     private void saveToJson() {
         FileOutputStream outputStream;
-
         JSONArray jsonArray = new JSONArray();
         JSONObject finalObject = new JSONObject();
-
 
         for (int i = 0; i < markerList.size(); i++) {
             try {
@@ -300,7 +278,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 object.put("latitude", markerList.get(i).getPosition().latitude);
                 object.put("longitude", markerList.get(i).getPosition().longitude);
                 object.put("title", markerList.get(i).getTitle());
-                //object.put("alpha", markerList.get(i).getAlpha());
                 jsonArray.put(object);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -327,7 +304,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void restoreFromJson() {
         FileInputStream inputStream;
         int DEFAULT_BUFFER_SIZE = 100000;
-        Gson gson = new Gson();
         String readJson;
         try {
             inputStream = openFileInput(MARKER_JSON);
@@ -349,8 +325,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             for (int i = 0; i < markerJson.length(); i++) {
                 object1 = markerJson.getJSONObject(i);
-                LatLng tee = new LatLng(object1.getDouble("latitude"), object1.getDouble("longitude"));
-                String tt = object1.getString("title");
                 Marker marker = mMap.addMarker(new MarkerOptions()
                         .position(new LatLng(object1.getDouble("latitude"), object1.getDouble("longitude")))
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
@@ -367,49 +341,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    /*
-        public void restoreFromJson() {
-            FileInputStream inputStream;
-            int DEFAULT_BUFFER_SIZE = 10000;
-            Gson gson = new Gson();
-            String readJson;
-            try {
-                inputStream = openFileInput(MARKER_JSON);
-                FileReader reader = new FileReader(inputStream.getFD());
-                char[] buf = new char[DEFAULT_BUFFER_SIZE];
-                int n;
-                StringBuilder builder = new StringBuilder();
-                while ((n = reader.read(buf)) >= 0) {
-                    String tmp = String.valueOf(buf);
-                    String substring = (n < DEFAULT_BUFFER_SIZE) ? tmp.substring(0, n) : tmp;
-                    builder.append(substring);
-                }
-                reader.close();
-                readJson = builder.toString();
-                Type collectionType = new TypeToken<List<Marker>>() {
-                }.getType();
-                List<Marker> o = gson.fromJson(readJson, collectionType);
-                if (o != null) {
-                    markerList.clear();
-                    mMap.clear();
-                    for (int i = 0; i < o.size(); i++) {
-                        Marker marker = mMap.addMarker(new MarkerOptions()
-                                .position(new LatLng(o.get(i).getPosition().latitude, o.get(i).getPosition().longitude))
-                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
-                                .alpha(0.8f)
-                                .title(String.format("Position:(%.3f, %.3f)", o.get(i).getPosition().latitude, o.get(i).getPosition().longitude)));
-                        markerList.add(marker);
-                    }
-                }
-
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
-    */
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
