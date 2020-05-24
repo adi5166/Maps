@@ -15,6 +15,8 @@ import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -209,21 +211,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     public void hideButtons(View view) {
+        Animation animation = AnimationUtils.loadAnimation(MapsActivity.this, R.anim.scale_down);
         FloatingActionButton button = findViewById(R.id.hide_button);
+        button.startAnimation(animation);
         button.setVisibility(View.INVISIBLE);
         button = findViewById(R.id.accel_button);
+        button.startAnimation(animation);
         button.setVisibility(View.INVISIBLE);
-        /*
-        TextView textView = findViewById(R.id.accel_text);
-        textView.setVisibility(View.INVISIBLE);
-         */
         //TODO animacja chowania przycisków
     }
 
     public void showButtons() {
+        Animation animation = AnimationUtils.loadAnimation(MapsActivity.this, R.anim.scale_up);
+
         FloatingActionButton button = findViewById(R.id.hide_button);
         button.setVisibility(View.VISIBLE);
+        button.startAnimation(animation);
         button = findViewById(R.id.accel_button);
+        button.startAnimation(animation);
         button.setVisibility(View.VISIBLE);
         //TODO animacja pojawiania się przycisków
     }
